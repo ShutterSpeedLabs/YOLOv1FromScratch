@@ -11,6 +11,7 @@ from tqdm import tqdm
 from torch.utils.data import DataLoader
 from model import Yolov1
 from dataset import VOCDataset
+import time
 from utils import (
     non_max_suppression,
     mean_average_precision,
@@ -32,10 +33,10 @@ DEVICE = "cuda" if torch.cuda.is_available else "cpu"
 BATCH_SIZE = 64 # 64 in original paper but I don't have that much vram, grad accum?
 WEIGHT_DECAY = 0
 EPOCHS = 1000
-NUM_WORKERS = 2
+NUM_WORKERS = 6
 PIN_MEMORY = True
-LOAD_MODEL = False
-LOAD_MODEL_FILE = "overfit.pth.tar"
+LOAD_MODEL = True
+LOAD_MODEL_FILE = "last_model.pth"
 IMG_DIR = "data/images"
 LABEL_DIR = "data/labels"
 
@@ -84,8 +85,8 @@ def main():
         load_checkpoint(torch.load(LOAD_MODEL_FILE), model, optimizer)
 
     train_dataset = VOCDataset(
-        "data/100examples.csv",
-        transform=transform,
+        "data/train.csv",
+        transform=transform,    
         img_dir=IMG_DIR,
         label_dir=LABEL_DIR,
     )
@@ -142,6 +143,14 @@ def main():
         #    time.sleep(10)
 
         train_fn(train_loader, model, optimizer, loss_fn)
+        # Save the last model
+        checkpoint = {
+               "state_dict": model.state_dict(),
+               "optimizer": optimizer.state_dict(),
+        }
+        save_checkpoint(checkpoint, filename=LOAD_MODEL_FILE)
+        time.sleep(0.5)
+
 
 
 if __name__ == "__main__":

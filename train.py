@@ -113,7 +113,7 @@ def main():
         drop_last=True,
     )
 
-    for epoch in range(EPOCHS):
+    for epoch in tqdm(range(EPOCHS)):
         # for x, y in train_loader:
         #    x = x.to(DEVICE)
         #    for idx in range(8):

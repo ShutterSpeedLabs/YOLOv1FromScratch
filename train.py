@@ -30,12 +30,12 @@ torch.manual_seed(seed)
 # Hyperparameters etc. 
 LEARNING_RATE = 2e-5
 DEVICE = "cuda" if torch.cuda.is_available else "cpu"
-BATCH_SIZE = 64 # 64 in original paper but I don't have that much vram, grad accum?
+BATCH_SIZE =  16 # 64 in original paper but I don't have that much vram, grad accum?
 WEIGHT_DECAY = 0
 EPOCHS = 1000
 NUM_WORKERS = 6
 PIN_MEMORY = True
-LOAD_MODEL = True
+LOAD_MODEL = False
 LOAD_MODEL_FILE = "last_model.pth"
 IMG_DIR = "data/images"
 LABEL_DIR = "data/labels"
